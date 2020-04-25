@@ -1,4 +1,5 @@
-$(document).ready(function(){
+$(document).ready(function(){ 
+    let edit=false;
   $('#task-result').hide();
 fetchTasks();  
     $('#search').keyup(function(e){
@@ -29,9 +30,11 @@ fetchTasks();
       const postData={
         name:$('#name').val(),
         description:$('#description').val(),
+        id:$('#taskId').val(),
       };
+      let url= edit===false ? 'task-add.php':'task-edit.php';
 //Funcion de JQuery envia info al back
-        $.post('task-add.php',postData,function(response){
+        $.post(url,postData,function(response){
             fetchTasks();
             $('#task-form').trigger('reset');
         });
@@ -53,7 +56,7 @@ fetchTasks();
                  tasks.forEach(task=>{
                      template+=`<tr taskId="${task.id}">
                      <td>${task.id}</td>
-                     <td>${task.name}</td>
+                    <td> <a href="#" class="task-item">${task.name}</a></td>
                      <td>${task.description}</td>
                      <td>
                      <button class="task-delete btn btn-danger btn-block">DELETE</button>
@@ -80,5 +83,21 @@ fetchTasks();
      }
     
    })
+
+   $(document).on('click','.task-item',function(){
+    let element=$(this)[0].parentElement.parentElement;//[0] esta el boton q doy click
+    let id=$(element).attr('taskId');//Esto lo declaro en el momento de llenar la tabla   
+    $.post('task-single.php',{id},function(response){
+        const task=JSON.parse(response);
+        
+        $('#name').val(task.name);
+        $('#description').val(task.description);
+        $('#taskId').val(task.id);
+        edit=true;
+       
+            });
+       
+   })
+
 });
 

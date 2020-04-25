@@ -1,6 +1,6 @@
 <?php
 include('database.php');
-if(isset($_POST['name'])){
+if(isset($_POST['name'])||isset($_POST['description'])){
     $name=$_POST['name'];
     $description=$_POST['description'];
     $query="INSERT INTO tareas(name,description) VALUES ('$name','$description')";
